@@ -16,6 +16,10 @@
       {
         "command": "pet-pixel.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "extension.openPet",
+        "title": "Open Pet"
       }
     ]
   },
