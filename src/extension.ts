@@ -1,43 +1,40 @@
-
 import * as vscode from 'vscode';
+
 export function activate(context: vscode.ExtensionContext) {
-	
-	console.log('Congratulations, your extension "pet-pixel" is now active!');
-	const disposable = vscode.commands.registerCommand('pet-pixel.helloWorld', () => {
-		vscode.window.showInformationMessage('Hello World from pet pixel!');
-	});
-	const openPetCommand = vscode.commands.registerCommand('extension.openPet', () => {
-        const panel = vscode.window.createWebviewPanel(
-            'petPanel',
-            'VS Code Pet',
-            vscode.ViewColumn.One,
-            { enableScripts: true }
-        );
+    const petProvider = new PetProvider();
+    vscode.window.registerTreeDataProvider('petPixelPanelView', petProvider);
 
-        panel.webview.html = getWebviewContent();
-   
-    });
-
-    context.subscriptions.push(openPetCommand);
-
-	context.subscriptions.push(disposable);
+    console.log('Pet Pixel extension is active!');
 }
+
 export function deactivate() {}
-function getWebviewContent() {
-    return `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <style>
-                body { font-family: Arial, sans-serif; }
-                .pet { font-size: 24px; }
-            </style>
-        </head>
-        <body>
-            <div class="pet">🐾 Meow!</div>
-    
-        </body>
-        </html>
-    `;
+
+class PetProvider implements vscode.TreeDataProvider<PetTreeItem> {
+    private _onDidChangeTreeData: vscode.EventEmitter<PetTreeItem | undefined | void> =
+        new vscode.EventEmitter<PetTreeItem | undefined | void>();
+    readonly onDidChangeTreeData: vscode.Event<PetTreeItem | undefined | void> =
+        this._onDidChangeTreeData.event;
+
+    getTreeItem(element: PetTreeItem): vscode.TreeItem {
+        return element;
+    }
+
+    getChildren(element?: PetTreeItem): PetTreeItem[] {
+        if (!element) {
+            return [
+                new PetTreeItem('🐾 Mew Mew Meooowww!', vscode.TreeItemCollapsibleState.None),
+            ];
+        }
+        return [];
+    }
+
+    refresh(): void {
+        this._onDidChangeTreeData.fire();
+    }
+}
+
+class PetTreeItem extends vscode.TreeItem {
+    constructor(label: string, collapsibleState: vscode.TreeItemCollapsibleState) {
+        super(label, collapsibleState);
+    }
 }

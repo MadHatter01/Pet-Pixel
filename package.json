@@ -11,17 +11,16 @@
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
+
   "contributes": {
-    "commands": [
-      {
-        "command": "pet-pixel.helloWorld",
-        "title": "Hello World"
-      },
-      {
-        "command": "extension.openPet",
-        "title": "Open Pet"
-      }
-    ]
+    "views": {
+      "panel": [
+        {
+          "id": "petPixelPanelView",
+          "name": "Pet Pixel"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
