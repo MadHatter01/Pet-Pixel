@@ -1,40 +1,64 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-    const petProvider = new PetProvider();
-    vscode.window.registerTreeDataProvider('petPixelPanelView', petProvider);
+    const petPixelViewProvider = new PetPixelViewProvider(context);
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider('petPixelPanelView', petPixelViewProvider)
+    );
 
     console.log('Pet Pixel extension is active!');
 }
 
 export function deactivate() {}
 
-class PetProvider implements vscode.TreeDataProvider<PetTreeItem> {
-    private _onDidChangeTreeData: vscode.EventEmitter<PetTreeItem | undefined | void> =
-        new vscode.EventEmitter<PetTreeItem | undefined | void>();
-    readonly onDidChangeTreeData: vscode.Event<PetTreeItem | undefined | void> =
-        this._onDidChangeTreeData.event;
+class PetPixelViewProvider implements vscode.WebviewViewProvider {
+    private _context: vscode.ExtensionContext;
 
-    getTreeItem(element: PetTreeItem): vscode.TreeItem {
-        return element;
+    constructor(context: vscode.ExtensionContext) {
+        this._context = context;
     }
 
-    getChildren(element?: PetTreeItem): PetTreeItem[] {
-        if (!element) {
-            return [
-                new PetTreeItem('🐾 Mew Mew Meooowww!', vscode.TreeItemCollapsibleState.None),
-            ];
-        }
-        return [];
-    }
+    resolveWebviewView(
+        webviewView: vscode.WebviewView,
+        context: vscode.WebviewViewResolveContext,
+        token: vscode.CancellationToken
+    ) {
+        webviewView.webview.options = { enableScripts: true };
+        webviewView.webview.html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        background-color: #1e1e1e;
+                        overflow:hidden;
+                    }
+                    canvas {
+                        border: 1px solid #555;
+                    }
+                </style>
+            </head>
+            <body>
+            <h1>Hello </h1>
+                <canvas id="petCanvas" width="300" height="300"></canvas>
+                <script>
+                    const canvas = document.getElementById('petCanvas');
+                    const ctx = canvas.getContext('2d');
 
-    refresh(): void {
-        this._onDidChangeTreeData.fire();
-    }
-}
-
-class PetTreeItem extends vscode.TreeItem {
-    constructor(label: string, collapsibleState: vscode.TreeItemCollapsibleState) {
-        super(label, collapsibleState);
+                    // Draw a single dot
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.arc(150, 150, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                </script>
+            </body>
+            </html>
+        `;
     }
 }

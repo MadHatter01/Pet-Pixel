@@ -12,10 +12,11 @@
   "activationEvents": [],
   "main": "./out/extension.js",
 
-  "contributes": {
+    "contributes": {
     "views": {
-      "panel": [
+      "explorer": [
         {
+          "type":"webview",
           "id": "petPixelPanelView",
           "name": "Pet Pixel"
         }
