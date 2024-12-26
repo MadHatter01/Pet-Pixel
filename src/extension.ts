@@ -45,17 +45,40 @@ class PetPixelViewProvider implements vscode.WebviewViewProvider {
                 </style>
             </head>
             <body>
-            <h1>Hello </h1>
+            <h1>Meow! </h1>
                 <canvas id="petCanvas" width="300" height="300"></canvas>
                 <script>
+
+
                     const canvas = document.getElementById('petCanvas');
                     const ctx = canvas.getContext('2d');
+                   let x = 150;
+                   let y = 150;
+                   let radius = 10;
+                   let dx = 1;
+                   let dy = 1;
+                    function animate(){
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = 'white';
+                        ctx.beginPath();
+                        ctx.arc(x, y, 10, 0, Math.PI * 2);
+                        ctx.fill();
 
-                    // Draw a single dot
-                    ctx.fillStyle = 'white';
-                    ctx.beginPath();
-                    ctx.arc(150, 150, 10, 0, Math.PI * 2);
-                    ctx.fill();
+                        x += dx;
+                        y += dy;
+
+                        if(x + radius > canvas.width || x - radius < 0){
+                            dx = -dx;
+                        }
+
+                        if(y+radius > canvas.height || y - radius < 0){
+                            dy = -dy;
+                        }
+
+                        requestAnimationFrame(animate);
+                    }
+
+                    animate();
                 </script>
             </body>
             </html>
