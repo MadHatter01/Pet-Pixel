@@ -45,10 +45,8 @@ class PetPixelViewProvider implements vscode.WebviewViewProvider {
                 </style>
             </head>
             <body>
-            <h1>Meow! </h1>
-                <canvas id="petCanvas" width="300" height="300"></canvas>
+                <canvas id="petCanvas" width="150" height="150"></canvas>
                 <script>
-
 
                     const canvas = document.getElementById('petCanvas');
                     const ctx = canvas.getContext('2d');
@@ -68,10 +66,12 @@ class PetPixelViewProvider implements vscode.WebviewViewProvider {
                         y += dy;
 
                         if(x + radius > canvas.width || x - radius < 0){
+                            dx = (Math.random() - 0.5)*2;
                             dx = -dx;
                         }
 
-                        if(y+radius > canvas.height || y - radius < 0){
+                        if(y + radius > canvas.height || y - radius < 0){
+                            dy = (Math.random() - 0.5)*2;
                             dy = -dy;
                         }
 
