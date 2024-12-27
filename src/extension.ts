@@ -53,8 +53,24 @@ class PetPixelViewProvider implements vscode.WebviewViewProvider {
                    let x = 150;
                    let y = 150;
                    let radius = 10;
-                   let dx = 1;
-                   let dy = 1;
+                   let dx = (Math.random() - 0.5)*4;
+                   let dy = (Math.random() - 0.5)*4;
+                   let isFollowing = false;
+                   let mouseTimeout;
+
+                   canvas.addEventListener('mousemove', (event)=>{
+                        const rect = canvas.getBoundingClientRect();
+                        const mousex = event.clientX - rect.left;
+                        const mousey = event.clientY - rect.top;
+                        x = mousex;
+                        y = mousey;
+                        isFollowing = true;
+
+                         clearTimeout(mouseTimeout);
+        mouseTimeout = setTimeout(() => {
+            isFollowing = false;
+        }, 3000);
+                   })
                     function animate(){
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.fillStyle = 'white';
@@ -62,16 +78,13 @@ class PetPixelViewProvider implements vscode.WebviewViewProvider {
                         ctx.arc(x, y, 10, 0, Math.PI * 2);
                         ctx.fill();
 
-                        x += dx;
-                        y += dy;
+                        x += dx ;
 
                         if(x + radius > canvas.width || x - radius < 0){
-                            dx = (Math.random() - 0.5)*2;
-                            dx = -dx;
+                            dx = -dx
                         }
 
                         if(y + radius > canvas.height || y - radius < 0){
-                            dy = (Math.random() - 0.5)*2;
                             dy = -dy;
                         }
 
