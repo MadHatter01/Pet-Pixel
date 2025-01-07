@@ -13,8 +13,10 @@ let angle = 0;
 let isHovering = false;
 canvas.addEventListener('mousemove', (event)=>{
     const rect = canvas.getBoundingClientRect();
-     mousex = event.clientX - rect.left;
-     mousey = event.clientY - rect.top;
+    const canvasx = event.clientX - rect.left;
+    const canvasy = event.clientY - rect.top;
+    mousex = Math.max(0, Math.min(canvasx, canvas.width));
+    mousey = Math.max(0, Math.min(canvasy, canvas.height));
     isHovering = true;
     isFollowing = true;
 });
@@ -30,7 +32,7 @@ if (isHovering) {
    
         x = mousex + 30 * Math.cos(angle);
         y = mousey + 30 * Math.sin(angle);
-        angle += 0.05; 
+        angle += 0.01; 
     }
 else{
     x += dx ;
